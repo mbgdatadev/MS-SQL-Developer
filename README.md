@@ -1,5 +1,7 @@
 - [SQL Nedir](#sql-nedir)
 - [Veritabani Nedir](#veritabani-nedir)
+- [SQLServer Kurulumu](#sqlserver-kurulumu)
+
 
 
 
@@ -35,3 +37,12 @@ Veritabanlarının bazı temel özellikleri şunlardır:
 - **İlişkisel Veritabanları (RDBMS):** Veriler tablolar halinde saklanır ve SQL kullanılarak yönetilir. Örneğin, MySQL, PostgreSQL, Microsoft SQL Server.
 - **İlişkisel Olmayan Veritabanları (NoSQL):** Veriler belge, anahtar-değer, grafik veya sütun aileleri gibi farklı yapılarla saklanır. Daha esnek veri modellerine sahiptir. Örneğin, MongoDB, Redis, Cassandra.
 Veritabanları, modern yazılım uygulamalarında verilerin etkili bir şekilde saklanması ve yönetilmesi için kritik bir rol oynar.
+
+***
+
+## SQLServer Kurulumu
+
+1. Sql Server kurulum dosyasını çalıştır.
+2. New SQL Server stand-alone installation orr add features to an existing installation tıkla.
+3. 
+
