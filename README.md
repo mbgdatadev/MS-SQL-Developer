@@ -1,6 +1,8 @@
 - [SQL Nedir](#sql-nedir)
 - [Veritabani Nedir](#veritabani-nedir)
-- [SQLServer Kurulumu](#sqlserver-kurulumu)
+- [SQL Server Kurulumu](#sqlserver-kurulumu)
+- [SQL Connetion](#sql-connection)
+- [Veri Tabani Olusturma](#veri-tabani-olusturma)
 
 
 
@@ -48,4 +50,38 @@ Sql Server next next şeklinde hızlaca kura bilirsin sadece aşağıda adımlar
 3.  Featur Selection gelince Database Engine Services seçiyoruz.
 4.  Database Engine Configuration gelince Mixed Mode bir şifre ver örneğin Sa123456* ve Add Current User butonuna tıkla
 5. SQL Server Managment Studio kur.
+***
+## SQL Connetion
+SQL Connection (SQL Bağlantısı), bir uygulama ile bir SQL veritabanı arasında iletişim kurulmasını sağlayan bir bağlantıdır. Bu bağlantı, uygulamanın veritabanına erişmesini, veri sorgulaması yapmasını, veri eklemesini, güncellemesini veya silmesini mümkün kılar.
 
+SQL Server Managment Studio açtığımızda Server name yerine 
+- `.`
+- `localhost`
+- `(local)`
+- `Lenovo-CV855T98` ->Kullandığınız PC Adı
+- Yukarıdaki isimleri yazarsak Windows Authentication ile sql server bağlana biliriz.
+- `127.0.0.1` -> Named Pipes hatası alırsanız Sql server configuration manager aç. Sql server Network Configuration tıkla Named Pipes ve TCP/IP enable hale getir. Sql Server Restart işlemi yap. Sonra Windows Authentication ile sql server bağlana biliriz.
+- `192.168.1.39` -> Active Directory yoksa kendi ip'niz ile Windows Authentication ile sql server bağlanamazsınız.
+                     Sql Server Authentication ile login ve password girerek bağlana bilirsiniz. Örneğin Login:`sa` 
+                     ve  Password:`Sa123456*` sql server kurarken `sa` için belirlediğiniz şifre.
+  ***
+
+  ## Veri Tabani Olusturma
+Microsoft SQL Server'da yeni bir veritabanı oluşturmanın iki yolu vardır: T-SQL komutları kullanarak (kod ile) ve SQL Server Management Studio (SSMS) kullanarak (fare ile). Her iki yöntemi de aşağıda açıklayacağım. Sql Server bir database iki dosyadan bir `mdf` diğeri `ldf` tir. `mdf` data dosyasıdır, `ldf` log dosyasıdır.
+#### 1. T-SQL Komutları ile (Kod ile)
+
+```sql
+CREATE DATABASE VeritabaniAdi;
+```
+#### 2. SQL Server Management Studio (SSMS) ile (Fare ile)
+- SSMS'i Başlatın: SQL Server Management Studio'yu başlatın ve SQL Server'a bağlanın.
+- Veritabanları Düğümüne Sağ Tıklayın: Object Explorer penceresinde, "Databases" düğümüne sağ tıklayın.
+- Yeni Veritabanı Oluşturun: Açılan menüden "New Database..." seçeneğine tıklayın.
+- Veritabanı Adını Girin: Açılan "New Database" penceresinde, oluşturmak istediğiniz veritabanının adını girin (örneğin, "MyDatabase").
+- Diğer Ayarları Yapın (Opsiyonel): Bu pencerede veritabanının dosya adları, boyutları ve büyüme ayarları gibi ek ayarları yapabilirsiniz.
+- Veritabanını Oluşturun: "OK" düğmesine tıklayarak veritabanını oluşturun.
+
+Her iki yöntem de veritabanınızı başarıyla oluşturacaktır. Kod yöntemi, özellikle otomatikleştirilmiş işlemler veya betik oluşturma için kullanışlıdır. Fare yöntemi ise görsel bir arayüz kullanarak işlemleri daha sezgisel bir şekilde yapmanızı sağlar.
+
+
+  
