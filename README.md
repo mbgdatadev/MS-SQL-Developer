@@ -41,8 +41,11 @@ Veritabanları, modern yazılım uygulamalarında verilerin etkili bir şekilde 
 ***
 
 ## SQLServer Kurulumu
+Sql Server next next şeklinde hızlaca kura bilirsin sadece aşağıda adımlarda dikkat et.
 
 1. Sql Server kurulum dosyasını çalıştır.
-2. New SQL Server stand-alone installation orr add features to an existing installation tıkla.
-3. 
+2. New SQL Server stand-alone installation or add features to an existing installation tıkla.
+3.  Featur Selection gelince Database Engine Services seçiyoruz.
+4.  Database Engine Configuration gelince Mixed Mode bir şifre ver örneğin Sa123456* ve Add Current User butonuna tıkla
+5. SQL Server Managment Studio kur.
 
