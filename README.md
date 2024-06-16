@@ -4,7 +4,15 @@
 - [SQL Connetion](#sql-connection)
 - [Veri Tabani Olusturma](#veri-tabani-olusturma)
 - [Veri Tipleri ve Normalizasyon](#veri-tipleri-ve-normalizasyon)
-- 
+- [Veri Tabani Komutları](#veri-tabani-komutları)
+- [SELECT Komutu](#select-komutu)
+- [INSERT Komutu](#insert-komutu)
+- [UPDATE Komutu](#update-komutu)
+- [DELETE Komutu](#delete-komutu)
+- [TRUNCATE Komutu](#truncate-komutu)
+- [WHERE Sarti Kavrami](#where-sarti-kavrami)
+- [Select Komutu](#select-komutu)
+
 
 
 
@@ -280,6 +288,205 @@ Microsoft SQL Server'da tam sayı veri tipleri, farklı boyutlarda ve aralıklar
 - **TABLE**
   - Depolama Alanı: Değişken
   - Açıklama: Geçici sonuç kümelerini depolamak için kullanılır. Genellikle saklı yordamlar içinde kullanılır.
+
+***
+## Veri Tabani Komutları
+SQL (Structured Query Language) çeşitli komutlar içerir ve bu komutlar genellikle işlevlerine göre farklı kategorilere ayrılır. Bu kategoriler DDL (Data Definition Language), DML (Data Manipulation Language), DCL (Data Control Language) ve TCL (Transaction Control Language) olarak sınıflandırılır. 
+
+
+#### DDL (Data Definition Language)
+DDL komutları, veritabanı yapısını tanımlamak ve yönetmek için kullanılır.
+- **CREATE**: Yeni bir veritabanı nesnesi oluşturur (tablo, indeks, görünüm, vb.)
+  - Örnek: `CREATE TABLE Customers (CustomerID INT, Name NVARCHAR(50));`
+
+- **ALTER**: Varolan bir veritabanı nesnesini değiştirir.
+  - Örnek: `ALTER TABLE Customers ADD Email NVARCHAR(100);`
+
+- **DROP**: Varolan bir veritabanı nesnesini siler.
+  - Örnek: `DROP TABLE Customers;`
+
+- **TRUNCATE**: Bir tablodaki tüm verileri siler, ancak tablo yapısını korur.
+  - Örnek: `TRUNCATE TABLE Customers;`
+
+- **RENAME**: Bir veritabanı nesnesinin adını değiştirir (bu komut SQL Server'da doğrudan desteklenmez, ancak diğer SQL veritabanlarında bulunabilir).
+  - Örnek: `EXEC sp_rename 'OldTableName', 'NewTableName';`
+***
+#### DML (Data Manipulation Language)
+DML komutları, veritabanındaki verileri işlemek için kullanılır.
+- **SELECT**: Veritabanından veri seçer ve getirir.
+  - Örnek: `SELECT * FROM Customers;`
+
+- **INSERT**: Bir tabloya yeni satırlar ekler.
+  - Örnek: `INSERT INTO Customers (CustomerID, Name) VALUES (1, 'John Doe');`
+
+- **UPDATE**: Varolan veriyi günceller.
+  - Örnek: `UPDATE Customers SET Name = 'Jane Doe' WHERE CustomerID = 1;`
+
+- **DELETE**: Varolan veriyi siler.
+  - Örnek: `DELETE FROM Customers WHERE CustomerID = 1;`
+
+***
+#### DCL (Data Control Language)
+DCL komutları, veritabanındaki erişim haklarını ve izinleri yönetmek için kullanılır.
+- **GRANT**: Kullanıcılara belirli izinler verir.
+  - Örnek: `GRANT SELECT ON Customers TO User1;`
+
+- **REVOKE**: Kullanıcılardan belirli izinleri geri alır.
+  - Örnek: `REVOKE SELECT ON Customers FROM User1;`
+
+***
+#### TCL (Transaction Control Language)
+TCL komutları, veritabanı işlemlerini yönetmek için kullanılır.
+- **BEGIN TRANSACTION**: Yeni bir işlem başlatır.
+  - Örnek: `BEGIN TRANSACTION;`
+
+- **COMMIT**: İşlemi onaylar ve yapılan değişiklikleri kalıcı hale getirir.
+  - Örnek: `COMMIT;`
+
+- **ROLLBACK**: İşlemi geri alır ve yapılan değişiklikleri iptal eder.
+  - Örnek: `ROLLBACK;`
+
+- **SAVE TRANSACTION**: Bir işlem içinde bir savepoint oluşturur.
+  - Örnek: `SAVE TRANSACTION SavepointName;`
+***
+#### Yardımcı Komutlar
+SQL'de ayrıca yardımcı komutlar da bulunur. Bu komutlar belirli durumlar için kullanışlıdır.
+- **USE**: Belirli bir veritabanını seçer.
+  - Örnek: `USE MyDatabase;`
+
+- **EXEC**: Bir saklı yordamı veya dinamik SQL deyimini çalıştırır.
+  - Örnek: `EXEC sp_helpdb;`
+
+- **SET**: SQL Server oturumu için değişkenlerin veya seçeneklerin değerini ayarlar.
+  - Örnek: `SET NOCOUNT ON;`
+    
+Bu komutlar, SQL Server'da çalışırken temel işlevlerin büyük bir kısmını gerçekleştirmenizi sağlar. Her kategori belirli bir işlev grubuna hizmet eder ve doğru kullanımı, veritabanı yönetimi ve veri işlemleri açısından önemlidir.
+***
+
+## SELECT Komutu
+`SELECT` komutu, SQL'de veritabanından veri çekmek için kullanılır. `SELECT` komutu, belirtilen kolonları seçip, belirli kriterlere göre filtreleyerek sonuç döndürür.
+
+#### SELECT Komutunun Temel Sözdizimi
+```sql
+SELECT column1, column2, ...
+FROM table_name
+WHERE condition;
+```
+1. Tablodaki Tüm Verileri Seçmek
+```sql
+SELECT * FROM Customers;
+```
+2. Belirli Kolonları Seçmek
+```sql
+SELECT CustomerID, Name, Email FROM Customers;
+```
+
+3. Koşul ile Veri Seçmek
+```sql
+SELECT * FROM Customers WHERE Country = 'Turkey';
+```
+## INSERT Komutu
+ `INSERT` komutu, SQL'de bir tabloya yeni satırlar eklemek için kullanılır. `INSERT` komutu, belirtilen kolonlara uygun değerleri ekleyerek tabloya yeni veri satırları ekler.
+#### INSERT Komutunun Temel Sözdizimi
+
+```sql
+INSERT INTO table_name (column1, column2, ...)
+VALUES (value1, value2, ...);
+```
+1. Tabloya Yeni Bir Satır Eklemek
+
+```sql
+INSERT INTO Customers (CustomerID, Name, Email)
+VALUES (1, 'Burak Dev', 'burak.dev@example.com');
+```
+2. Belirli Kolonlara Değer Eklemek
+```sql
+INSERT INTO Customers (CustomerID, Name)
+VALUES (3, 'Damla Can');
+```
+3. Birden Fazla Satır Eklemek
+```sql
+INSERT INTO Customers (CustomerID, Name, Email)
+VALUES 
+(4, 'Deniz Kara', 'deniz.kara@example.com'),
+(5, 'Merve Kılıç', 'merve.kilic@example.com');
+```
+
+***
+## UPDATE Komutu
+`UPDATE` komutu, SQL'de varolan kayıtları güncellemek için kullanılır. `UPDATE` komutu, belirtilen kolonlarda yeni değerler ayarlayarak mevcut veri satırlarını günceller.
+
+#### UPDATE Komutunun Temel Sözdizimi
+```sql
+UPDATE table_name
+SET column1 = value1, column2 = value2, ...
+WHERE condition;
+```
+1. Bir Kolonu Güncellemek
+```sql
+UPDATE Customers
+SET Email = 'new.email@example.com'
+WHERE CustomerID = 1;
+```
+2. Birden Fazla Kolonu Güncellemek
+```sql
+UPDATE Customers
+SET Name = 'Jane Smith', Email = 'jane.smith@example.com'
+WHERE CustomerID = 2;
+``` 
+3. Koşul İle Güncelleme Yapmak
+```sql
+UPDATE Customers
+SET Country = 'Turkey'
+WHERE Country = 'USA';
+```  
+4. Tüm Satırları Güncellemek
+```sql
+UPDATE Customers
+SET Country = 'Unknown';
+```     
+***
+## DELETE Komutu
+`DELETE` komutu, SQL'de varolan kayıtları silmek için kullanılır. `DELETE` komutu, belirtilen koşula uygun olan veri satırlarını bir tablodan siler.
+
+#### DELETE Komutunun Temel Sözdizimi
+```sql
+DELETE FROM table_name
+WHERE condition;
+```
+1. Belirli Satırı Silmek
+```sql
+DELETE FROM Customers
+WHERE CustomerID = 1;
+```
+2. Belirli Koşula Uygun Satırları Silmek
+```sql
+DELETE FROM Customers
+WHERE Country = 'Turkey';
+``` 
+3. Tüm Satırları Silmek
+```sql
+DELETE FROM Customers;
+```     
+***
+## TRUNCATE Komutu
+`TRUNCATE` komutu, SQL'de bir tablodaki tüm verileri hızlı bir şekilde silmek için kullanılır. `TRUNCATE` komutu, DELETE komutundan farklı olarak veritabanı günlük dosyalarını doldurmadan ve veri satırlarını fiziksel olarak silmeden tabloyu temizler. Bu nedenle `TRUNCATE` komutu genellikle `DELETE` komutundan daha hızlıdır ve büyük veri kümeleri üzerinde performans avantajı sağlar.
+
+#### TRUNCATE Komutunun Temel Sözdizimi
+
+```sql
+TRUNCATE TABLE table_name;
+
+TRUNCATE TABLE Customers;
+```  
+#### Dikkat Edilmesi Gereken Noktalar
+   - `TRUNCATE` işlemi, veritabanı günlük dosyalarını doldurmadan ve log kaydı oluşturmadan tabloyu hızlıca temizler. Bu durum, büyük veri kümeleri üzerinde performans açısından avantaj sağlar.
+
+   - `TRUNCATE` komutu, tablodaki tüm verileri siler ancak tablonun yapısını (şemasını) korur. Bu nedenle, tablonun yeniden oluşturulmasını veya veri yapısının bozulmasını gerektirmeyen durumlarda tercih edilir.
+
+   - `TRUNCATE` işlemi geri alınamaz ve silinen verileri kurtarmak mümkün değildir. Dolayısıyla, veri koruma ve geri alma ihtiyacı olan durumlarda `DELETE` komutu kullanılmalıdır.
+
+Bu bilgiler doğrultusunda, `TRUNCATE` komutunun kullanımını ve önemli noktalarını anlamış olmalısınız.
 
 
 
