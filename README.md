@@ -11,7 +11,12 @@
 - [DELETE Komutu](#delete-komutu)
 - [TRUNCATE Komutu](#truncate-komutu)
 - [WHERE Sarti Kavrami](#where-sarti-kavrami)
-- [Select Komutu](#select-komutu)
+- [DISTINCT Komutu](#distinct-komutu)
+- [ORDER BY Komutu](#order-by-komutu)
+- [TOP Komutu](#top-komutu)
+- [ALTER Komutu](#alter-komutu)
+- [DROP Komutu](#drop-komutu)
+   
 
 
 
@@ -488,16 +493,314 @@ TRUNCATE TABLE Customers;
 
 Bu bilgiler doğrultusunda, `TRUNCATE` komutunun kullanımını ve önemli noktalarını anlamış olmalısınız.
 
+***
+### WHERE Sarti Kavrami
+`WHERE` koşulu, SQL sorgularında belirli bir koşula uyan satırları seçmek için kullanılır. Bu koşul, `SELECT`, `UPDATE`, `DELETE` gibi komutlarla birlikte kullanılabilir.
+
+1. Eşittir (=)
+
+```sql
+SELECT * FROM Customers WHERE Country = 'Turkey';
+```
+***  
+2. Eşit Değil (<>, !=)
+
+```sql
+SELECT * FROM Customers WHERE Country <> 'Turkey';
+SELECT * FROM Customers WHERE Country != 'Turkey';
+```
+***
+3. Küçüktür (<)
+
+```sql
+SELECT * FROM Products WHERE Price < 100;
+```
+***
+4. Büyüktür (>)
+
+```sql
+SELECT * FROM Products WHERE Price > 100;
+```
+***
+5. Küçük Eşittir (<=)
+
+```sql
+SELECT * FROM Products WHERE Price <= 100;
+```
+***
+6. Büyük Eşittir (>=)
+```sql
+SELECT * FROM Products WHERE Price >= 100;
+```
+***
+7. AND Operatörü
+   
+`AND` operatörü, birden fazla koşulun hepsinin doğru olduğu satırları seçer. Yani, tüm koşullar sağlanmalıdır.
+```sql
+SELECT * FROM Customers
+WHERE Country = 'Turkey' AND Age > 30;
+```
+***
+8. OR Operatörü
+   
+`OR` operatörü, birden fazla koşuldan en az birinin doğru olduğu satırları seçer. Yani, koşullardan biri veya daha fazlası sağlanmalıdır.
+- İki Koşuldan Birinin Sağlanması
+```sql
+SELECT * FROM Customers
+WHERE Country = 'Turkey' OR Age > 30;
+```
+- Birden Fazla Koşuldan Birinin Sağlanması
+```sql
+SELECT * FROM Products
+WHERE Category = 'Electronics' OR Price < 1000 OR Stock > 50;
+```
+***
+9. BETWEEN
+   
+Belirli bir aralıktaki satırları seçer (alt ve üst sınırlar dahildir).
+```sql
+SELECT * FROM Products WHERE Price BETWEEN 50 AND 150;
+```
+***
+10. LIKE
+    
+Belirli bir desene uyan satırları seçer (genellikle joker karakterlerle birlikte kullanılır: `%` herhangi bir karakter dizisini, `_` ise tek bir karakteri temsil eder).
+```sql
+-- Bu sorgu, Name kolonu 'A' harfiyle başlayan tüm müşterileri seçer.
+SELECT * FROM Customers WHERE Name LIKE 'A%';
+
+-- Bu sorgu, Name kolonu 'son' ile biten tüm müşterileri seçer.
+SELECT * FROM Customers WHERE Name LIKE '%son';
+
+-- Bu sorgu, Name kolonu içinde 'ann' karakter dizisini içeren tüm müşterileri seçer.
+SELECT * FROM Customers WHERE Name LIKE '%ann%';
+
+-- Bu sorgu, Name kolonu 'A' harfiyle başlayan ve 'n' harfiyle biten tüm müşterileri seçer.
+SELECT * FROM Customers WHERE Name LIKE 'A%n';
+
+-- Bu sorgu, Name kolonu ikinci karakteri 'a' olan tüm müşterileri seçer.
+SELECT * FROM Customers WHERE Name LIKE '_a%';
+
+-- Bu sorgu, Name kolonu tam olarak üç karakter uzunluğunda olan tüm müşterileri seçer.
+SELECT * FROM Customers WHERE Name LIKE '___';
+
+-- Bu sorgu, Name kolonu ikinci karakteri 'a' olan ve en az üç karakter uzunluğunda olan tüm müşterileri seçer.
+SELECT * FROM Customers WHERE Name LIKE '_a_%';
+```
+***
+11. EXISTS
+    
+ `EXISTS` operatörü, bir alt sorgunun en az bir satır döndürüp döndürmediğini kontrol eder. Genellikle, bir tablonun başka bir tabloyla ilişkili olup olmadığını kontrol etmek için kullanılır.
+
+```sql
+SELECT * FROM Customers
+WHERE EXISTS (SELECT 1 FROM Orders WHERE Orders.CustomerID = Customers.CustomerID);
+-- Bu sorguda, EXISTS operatörü Orders tablosunda en az bir siparişi olan müşterileri kontrol eder ve bu müşterileri Customers tablosundan seçer.
+```
+***
+12. NOT
+    
+`NOT` operatörü, bir koşulun sağlanmadığını belirtmek için kullanılır ve şu operatörlerle birlikte kullanılabilir:
+- `NOT IN`
+- `NOT LIKE`
+- `NOT BETWEEN`
+- `NOT EXISTS`
+- `NOT` ile birleştirilmiş diğer mantıksal operatörler (AND, OR)
+Bu operatörlerle birlikte NOT, SQL sorgularında daha esnek ve güçlü koşullar tanımlamanıza olanak tanır.
+***
+
+## DISTINCT Komutu
+`DISTINCT` operatörü, bir SQL sorgusunda yinelenen değerleri kaldırmak ve yalnızca benzersiz değerleri döndürmek için kullanılır.
+
+|CustomerID|Name|Country|City|
+|---|---|---|---|
+|1|John Doe|USA|New York|
+|2|Jane Smith|USA|Los Angeles|
+|3|Anna Brown|USA|New York|
+|4|Mike Davis|Canada|Toronto|
+|5|Emily Clark|Canada|Vancouver|
+|6|Liam Johnson|UK|London|
+|7|Olivia|Wilson|USA|Chicago|
 
 
+DISTINCT Kullanımı
+```sql
+SELECT DISTINCT column1, column2, ...
+FROM table_name;
+```
+
+1. Tek Kolonla Kullanım
+```sql
+SELECT DISTINCT Country FROM Customers;
+-- Bu sorgu, Customers tablosundaki benzersiz ülke adlarını döndürür.
+```
+#### Sonuç
+|Country|
+|---|
+|USA|
+|Canada|
+|UK|
+
+2. Birden Fazla Kolonla Kullanım
+```sql
+SELECT DISTINCT Country, City FROM Customers;
+-- Bu sorgu, Customers tablosundaki benzersiz ülke ve şehir kombinasyonlarını döndürür. Yani aynı ülke ve şehir ikilisine sahip olan satırlar tekrarlanmaz.
+```
+#### Sonuç
+|Country|City|
+|---|---|
+|USA|New York|
+|USA|Los Angeles|
+|USA|New York|
+|Canada|Toronto|
+|Canada|Vancouver|
+|UK|London|
+|USA|Chicago|
+
+***
+## ORDER BY Komutu
+`ORDER BY` ifadesi, SQL'de sorgu sonuçlarını belirli bir sütuna veya sütunlara göre sıralamak için kullanılır. Sonuçları artan (varsayılan olarak) veya azalan sıraya göre düzenleyebiliriz.
+
+ORDER BY Kullanımı
+```sql
+SELECT column1, column2, ...
+FROM table_name
+ORDER BY column1 [ASC | DESC], column2 [ASC | DESC], ...;
+
+-- column1, column2, ... : Sıralama yapılacak sütunlar.
+-- ASC : Artan sıraya göre sıralama (varsayılan).
+-- DESC : Azalan sıraya göre sıralama.
+```
+
+|CustomerID|Name|Country|City|
+|---|---|---|---|
+|1|John Doe|USA|New York|
+|2|Jane Smith|USA|Los Angeles|
+|3|Anna Brown|USA|New York|
+|4|Mike Davis|Canada|Toronto|
+|5|Emily Clark|Canada|Vancouver|
+|6|Liam Johnson|UK|London|
+|7|Olivia|Wilson|USA|Chicago|
+
+1. Tek Kolonla Artan Sıralama
+
+```sql
+SELECT * FROM Customers
+ORDER BY Name;
+```
+### Sonuç
+|CustomerID|Name|Country|City|
+|---|---|---|---|
+|3|Anna Brown|USA|New York|
+|5|Emily Clark|Canada|Vancouver|
+|1|John Doe|USA|New York|
+|6|Liam Johnson|UK|London|
+|4|Mike Davis|Canada|Toronto|
+|2|Jane Smith|USA|Los Angeles|
+|7|Olivia Wilson|USA|Chicago|
+
+2. Birden Fazla Kolonla Sıralama
+ ```sql
+SELECT * FROM Customers
+ORDER BY Country, City;
+```
+### Sonuç
+|CustomerID|Name|Country|City|
+|---|---|---|---|
+|4|Mike Davis|Canada|Toronto|
+|5|Emily Clark|Canada|Vancouver|
+|6|Liam Johnson|UK|London|
+|7|Olivia Wilson|USA|Chicago|
+|2|Jane Smith|USA|Los Angeles|
+|1|John Doe|USA|New York|
+|3|Anna Brown|USA|New York|
+
+3. Birden Fazla Kolonla Karışık Sıralama
+```sql
+SELECT * FROM Customers
+ORDER BY Country ASC, CustomerID DESC;
+```
+### Sonuç
+|CustomerID|Name|Country|City|
+|---|---|---|---|
+|7|Olivia Wilson|USA|Chicago|
+|3|Anna Brown|USA|New York|
+|2|Jane Smith|USA|Los Angeles|
+|1|John Doe|USA|New York|
+|5|Emily Clark|Canada|Vancouver|
+|4|Mike Davis|Canada|Toronto|
+|6|Liam Johnson|UK|London|
 
 
+***
+## TOP Komutu
+`TOP` komutu, SQL'de belirli bir sorgunun sonucunda döndürülecek ilk N kaydı belirlemek için kullanılır. Özellikle büyük veri kümelerinde performansı artırmak ve sorgu sonuçlarını sınırlamak için yaygın olarak kullanılır.
+TOP Komutu Kullanımı
+```sql
+SELECT TOP (N) column1, column2, ...
+FROM table_name
+WHERE condition
+ORDER BY column1, column2, ...;
+```
+- `N`: Döndürülecek ilk N kayıt sayısı.
+- `column1, column2, ...`: Sorgu sonucunda döndürülecek sütunlar.
+- `table_name`: Kayıtların alınacağı tablo adı.
+- `condition`: Opsiyonel olarak, sorgunun filtrelemesini yapacak koşullar.
+- `ORDER BY`: Opsiyonel olarak, sıralama yapılacak sütunlar.
+
+```sql
+SELECT TOP (3) * FROM Customers;
+-- Bu sorgu, Customers tablosundan ilk 3 müşteriyi döndürecektir. Sıralama belirtilmediği sürece, SQL sunucusunun takdirine bağlı olarak rastgele üç müşteri döndürebilir.
+```
+***
+## ALTER Komutu
+
+`ALTER` komutu, SQL'de mevcut bir veritabanı nesnesini (örneğin, tablo veya veritabanı) değiştirmek veya değiştirmek için kullanılır. Genellikle tabloları değiştirmek veya tabloya yeni sütunlar eklemek gibi işlemler için kullanılır.
 
 
+1. Tabloya Sütun Ekleme
 
+```sql
+ALTER TABLE table_name
+ADD column_name datatype;
+-- Bu komut, table_name tablosuna column_name adında yeni bir sütun ekler. datatype, eklenen sütunun veri türünü belirtir.
+```
 
+2. Sütun Değiştirme
+```sql
+ALTER TABLE table_name
+ALTER COLUMN column_name datatype;
+-- Bu komut, table_name tablosundaki column_name adlı sütunun veri türünü datatype olarak değiştirir.
+```
 
+3. Sütun Değiştirme
+```sql
+ALTER TABLE table_name
+ADD CONSTRAINT constraint_name constraint_type (columns);
+-- Bu komut, table_name tablosuna belirtilen kısıtlamayı ekler. constraint_name, kısıtlamanın adıdır ve constraint_type, kısıtlama türünü belirtir (örneğin, PRIMARY KEY, FOREIGN KEY, UNIQUE, CHECK gibi).
+```
 
+***
+## DROP Komutu
+`DROP` komutu SQL'de mevcut olan veritabanı nesnelerini (tablo, indeks, kısıtlama vb.) silmek için kullanılır.
+
+1. Tabloyu Silme
+```sql
+DROP TABLE table_name;
+-- Bu komut, table_name adlı tabloyu tamamen siler. Tablo ve içindeki veriler kalıcı olarak kaybolur.
+```
+
+2. İndeksi Silme
+```sql
+DROP INDEX index_name ON table_name;
+-- Bu komut, table_name tablosundaki index_name adlı indeksi siler.
+```
+3. Kısıtlamayı Silme
+```sql
+ALTER TABLE table_name
+DROP CONSTRAINT constraint_name;
+-- Bu komut, table_name tablosundaki constraint_name adlı kısıtlamayı (örneğin, PRIMARY KEY, FOREIGN KEY, UNIQUE, CHECK) siler.
+```
 
 
 
