@@ -16,6 +16,7 @@
 - [TOP Komutu](#top-komutu)
 - [ALTER Komutu](#alter-komutu)
 - [DROP Komutu](#drop-komutu)
+- [Aggregate Functions](#aggregate-functions)
    
 
 
@@ -801,7 +802,31 @@ ALTER TABLE table_name
 DROP CONSTRAINT constraint_name;
 -- Bu komut, table_name tablosundaki constraint_name adlı kısıtlamayı (örneğin, PRIMARY KEY, FOREIGN KEY, UNIQUE, CHECK) siler.
 ```
-
+***
+## Aggregate Functions
+SQL'deki toplu (aggregate) fonksiyonlar, bir grup değer üzerinde hesaplamalar yapmak ve tek bir sonuç döndürmek için kullanılır. En yaygın kullanılan toplu fonksiyonlar şunlardır: `COUNT`, `SUM`, `AVG`, `MIN`, `MAX`.
+### COUNT
+`COUNT` fonksiyonu, belirli bir sütundaki değerlerin sayısını döndürür.
+```sql
+SELECT COUNT(*) FROM Customers;
+```
+### SUM
+`SUM` fonksiyonu, belirli bir sütundaki sayıların toplamını döndürür.
+```sql
+SELECT SUM(Salary) FROM Employees;
+```
+### AVG
+`AVG` fonksiyonu, belirli bir sütundaki sayıların ortalamasını döndürür.
+```sql
+SELECT AVG(Salary) FROM Employees;
+```
+### MIN MAX
+`MIN` fonksiyonu, belirli bir sütundaki en küçük değeri döndürür.
+`MAX` fonksiyonu, belirli bir sütundaki en büyük değeri döndürür.
+```sql
+SELECT MIN(Salary) FROM Employees;
+SELECT MAX(Salary) FROM Employees;
+```
 
 
 
