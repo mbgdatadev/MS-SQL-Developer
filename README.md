@@ -17,6 +17,7 @@
 - [ALTER Komutu](#alter-komutu)
 - [DROP Komutu](#drop-komutu)
 - [Aggregate Functions](#aggregate-functions)
+- [GROUP BY Kavrami](#group-by-kavrami)
    
 
 
@@ -827,9 +828,39 @@ SELECT AVG(Salary) FROM Employees;
 SELECT MIN(Salary) FROM Employees;
 SELECT MAX(Salary) FROM Employees;
 ```
+## GROUP BY Kavarmi
+`GROUP BY` ifadesi SQL'de verileri belirli bir veya birden fazla sütuna göre gruplandırmak için kullanılır. Genellikle toplu (aggregate) fonksiyonlarla birlikte kullanılır. `GROUP BY`, gruplandırılmış veri kümeleri üzerinde toplu hesaplamalar yapmayı sağlar.
+```sql
+SELECT column1, aggregate_function(column2)
+FROM table_name
+WHERE condition
+GROUP BY column1;
 
+-- column1: Gruplandırılacak sütun(lar).
+-- aggregate_function(column2): Gruplanmış veriler üzerinde hesaplama yapmak için kullanılacak toplu fonksiyon.
+-- table_name: Kayıtların alınacağı tablo adı.
+-- condition: Opsiyonel olarak, sorgunun filtrelemesini yapacak koşullar.
+```
 
+|EmployeeID|Name|Department|Salary|
+|---|---|---|---|
+|1|John Doe|HR|50000|
+|2|Jane Smith|HR|60000|
+|3|Sam Brown|IT|55000|
+|4|Nancy Jones|IT|70000|
+|5|Emily Davis|IT|65000|
+|6|Mike Johnson|Sales|45000|
+|7|Sarah Black|Sales|48000|
 
-
-
+#### Departmana Göre Toplam Maaş
+```sql
+SELECT Department, SUM(Salary) AS TotalSalary
+FROM Employees
+GROUP BY Department;
+```
+|Department|TotalSalary|
+|---|---|
+|HR|110000|
+|IT|190000|
+|Sales|93000|
   
