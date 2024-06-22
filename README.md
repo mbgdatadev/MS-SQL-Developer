@@ -18,6 +18,8 @@
 - [DROP Komutu](#drop-komutu)
 - [Aggregate Functions](#aggregate-functions)
 - [GROUP BY Kavrami](#group-by-kavrami)
+- [Iliskisel Veritabani Nedir](#iliskisel-veritabani-nedir)
+- [JOIN Turleri](#join-turleri)
    
 
 
@@ -828,8 +830,8 @@ SELECT AVG(Salary) FROM Employees;
 SELECT MIN(Salary) FROM Employees;
 SELECT MAX(Salary) FROM Employees;
 ```
-## GROUP BY Kavarmi
-`GROUP BY` ifadesi SQL'de verileri belirli bir veya birden fazla sütuna göre gruplandırmak için kullanılır. Genellikle toplu (aggregate) fonksiyonlarla birlikte kullanılır. `GROUP BY`, gruplandırılmış veri kümeleri üzerinde toplu hesaplamalar yapmayı sağlar.
+## GROUP BY Kavrami
+`GROUP BY` ifadesi SQL'de verileri belirli bir veya birden fazla sütuna göre gruplandırmak için kullanılır. Genellikle toplu (aggregate) fonksiyonlarla birlikte kullanılır. `GROUP BY`, gruplandırılmış veri kümeleri üzerinde toplu hesaplamalar yapmayı sağlar. `HAVING` ifadesi, SQL'de `GROUP BY` ile gruplandırılmış veriler üzerinde filtreleme yapmak için kullanılır. `WHERE` ifadesi gruplama öncesinde satırları filtrelerken, `HAVING` ifadesi gruplama sonrasında grupları filtreler.
 ```sql
 SELECT column1, aggregate_function(column2)
 FROM table_name
@@ -863,4 +865,205 @@ GROUP BY Department;
 |HR|110000|
 |IT|190000|
 |Sales|93000|
-  
+
+
+#### HAVING Kullanımı
+```sql
+SELECT column1, aggregate_function(column2)
+FROM table_name
+WHERE condition
+GROUP BY column1
+HAVING condition;
+
+-- column1: Gruplandırılacak sütun(lar).
+-- aggregate_function(column2): Gruplanmış veriler üzerinde hesaplama yapmak için kullanılacak toplu fonksiyon.
+-- table_name: Kayıtların alınacağı tablo adı.
+-- condition: HAVING ifadesi ile gruplar üzerinde filtreleme yapacak koşullar.
+```
+#### Departmana Göre Toplam Maaşı 100000'den Fazla Olan Departmanlar
+
+```sql
+SELECT Department, SUM(Salary) AS TotalSalary
+FROM Employees
+GROUP BY Department
+HAVING SUM(Salary) > 100000;
+```
+|Department|TotalSalary|
+|---|---|
+|HR|110000|
+|IT|190000|
+
+***
+
+## Iliskisel Veritabani Nedir
+İlişkisel veritabanı, verilerin tablo formatında saklandığı ve bu tablolardaki verilerin birbirleriyle ilişkili olduğu bir veritabanı türüdür. İlişkisel veritabanları, verilerin düzenli ve mantıklı bir şekilde organize edilmesini sağlar. Veritabanı yönetim sistemi (DBMS) olarak adlandırılan yazılımlar aracılığıyla yönetilir ve Structured Query Language (SQL) kullanılarak veri ekleme, güncelleme, silme ve sorgulama işlemleri gerçekleştirilir.
+
+İlişkisel Veritabanı Türleri
+### (Bir-Bir) İlişki
+Bir tablodaki bir satırın, başka bir tabloda sadece bir satırla ilişkili olduğu ilişki türüdür. Genellikle detayları ayırmak veya veritabanını normalleştirmek amacıyla kullanılır.
+
+Örnek: Bir kişinin bir pasaportu vardır ve her pasaport sadece bir kişiye aittir.
+```sql
+CREATE TABLE Persons (
+    PersonID int PRIMARY KEY,
+    Name varchar(255),
+    PassportID int UNIQUE
+);
+
+CREATE TABLE Passports (
+    PassportID int PRIMARY KEY,
+    PassportNumber varchar(255),
+    PersonID int UNIQUE,
+    FOREIGN KEY (PersonID) REFERENCES Persons(PersonID)
+);
+```
+
+### (Bir-Çok) İlişki
+Bir tablodaki bir satırın, başka bir tabloda birden fazla satırla ilişkili olduğu ilişki türüdür. En yaygın ilişki türüdür.
+
+Örnek: Bir müşteri birçok sipariş verebilir, fakat her sipariş sadece bir müşteriyle ilişkilidir.
+```sql
+CREATE TABLE Customers (
+    CustomerID int PRIMARY KEY,
+    Name varchar(255)
+);
+
+CREATE TABLE Orders (
+    OrderID int PRIMARY KEY,
+    OrderDate date,
+    CustomerID int,
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+```
+
+### (Çok-Çok) İlişki
+Bir tabloda birden fazla satırın, başka bir tabloda birden fazla satırla ilişkili olduğu ilişki türüdür. Bu tür ilişkiler genellikle ara tablolar kullanılarak modellenir.
+
+Örnek: Bir öğrenci birçok derse kayıt olabilir ve her ders birçok öğrenci tarafından alınabilir.
+
+```sql
+CREATE TABLE Students (
+    StudentID int PRIMARY KEY,
+    Name varchar(255)
+);
+
+CREATE TABLE Courses (
+    CourseID int PRIMARY KEY,
+    CourseName varchar(255)
+);
+
+CREATE TABLE StudentCourses (
+    StudentID int,
+    CourseID int,
+    PRIMARY KEY (StudentID, CourseID),
+    FOREIGN KEY (StudentID) REFERENCES Students(StudentID),
+    FOREIGN KEY (CourseID) REFERENCES Courses(CourseID)
+);
+```
+
+
+Bu temel ilişki türleri, veritabanı tasarımının temel yapı taşlarıdır ve verilerin düzenli, tutarlı ve etkin bir şekilde saklanmasını sağlar.
+
+
+### Geleneksel Tablo Birleştirme
+
+```sql
+SELECT TOP(2)
+u.USERNAME_ , u.NAMESURNAME,u.EMAIL,u.BIRTHDATE,
+c.COUNTRY, 
+ct.CITY,
+t.TOWN,
+d.DISTRICT,
+a.POSTALCODE, a.ADDRESSTEXT 
+FROM USERS u,ADDRESS a,COUNTRIES c, CITIES ct, TOWNS t, DISTRICTS d
+WHERE a.USERID=u.ID
+AND   a.COUNTRYID=c.ID
+AND   a.CITYID=ct.ID
+AND   a.TOWNID=t.ID
+AND   a.DISTRICTID=d.ID
+
+-- Açıklama:
+-- SELECT TOP(2): En fazla 2 satır döndürmek için kullanılan SQL Server özel ifadesidir. Bu sorgu en fazla 2 satır döndürecektir.
+
+-- FROM: Sorguda kullanılacak tabloları belirtir.
+
+-- USERS u: USERS tablosunu u kısaltmasıyla temsil eder.
+-- ADDRESS a: ADDRESS tablosunu a kısaltmasıyla temsil eder.
+-- COUNTRIES c: COUNTRIES tablosunu c kısaltmasıyla temsil eder.
+-- CITIES ct: CITIES tablosunu ct kısaltmasıyla temsil eder.
+-- TOWNS t: TOWNS tablosunu t kısaltmasıyla temsil eder.
+-- DISTRICTS d: DISTRICTS tablosunu d kısaltmasıyla temsil eder.
+-- WHERE: İlişkisel koşulları belirtir, yani hangi sütunların hangi tablolar arasında eşleştirileceğini belirtir.
+
+-- a.USERID = u.ID: ADDRESS tablosundaki USERID sütunu ile USERS tablosundaki ID sütunu arasında eşleştirme yapar.
+-- a.COUNTRYID = c.ID: ADDRESS tablosundaki COUNTRYID sütunu ile COUNTRIES tablosundaki ID sütunu arasında eşleştirme yapar.
+-- a.CITYID = ct.ID: ADDRESS tablosundaki CITYID sütunu ile CITIES tablosundaki ID sütunu arasında eşleştirme yapar.
+-- a.TOWNID = t.ID: ADDRESS tablosundaki TOWNID sütunu ile TOWNS tablosundaki ID sütunu arasında eşleştirme yapar.
+-- a.DISTRICTID = d.ID: ADDRESS tablosundaki DISTRICTID sütunu ile DISTRICTS tablosundaki ID sütunu arasında eşleştirme yapar.
+-- SELECT: Sonuç olarak döndürülecek sütunları belirtir.
+
+-- u.USERNAME_, u.NAMESURNAME, u.EMAIL, u.BIRTHDATE: USERS tablosundan kullanıcı adı, isim-soyisim, e-posta ve doğum tarihi sütunları.
+-- c.COUNTRY: COUNTRIES tablosundan ülke adı sütunu.
+-- ct.CITY: CITIES tablosundan şehir adı sütunu.
+-- t.TOWN: TOWNS tablosundan kasaba adı sütunu.
+-- d.DISTRICT: DISTRICTS tablosundan ilçe adı sütunu.
+-- a.POSTALCODE, a.ADDRESSTEXT: ADDRESS tablosundan posta kodu ve adres metni sütunları.
+-- Bu sorgu, USERS tablosu ile ADDRESS, COUNTRIES, CITIES, TOWNS ve DISTRICTS tabloları arasındaki ilişkileri kullanarak belirli sorgu kriterlerine göre veri çeker.
+```
+***
+## JOIN Turleri
+SQL'de `JOIN`, ilişkisel veritabanlarında birden fazla tabloyu birleştirmek için kullanılan bir operatördür. İki veya daha fazla tablo arasında ilişki kurarak, bu tablolardan gelen verileri birleştirir ve istenilen sonuçları elde etmeyi sağlar.
+
+### JOIN Türleri
+`INNER JOIN`: İki tablo arasında eşleşen kayıtları döndürür. Yani, her iki tabloda da ortak olan verileri getirir. Ortak olmayan verileri getirmez.
+
+Örnek:
+```sql
+SELECT *
+FROM Orders o
+INNER JOIN Customers c ON o.CustomerID = c.CustomerID;
+Bu örnekte, Orders tablosu ile Customers tablosu CustomerID sütunları üzerinden INNER JOIN ile birleştirilmiştir. Bu işlem, her bir siparişin müşteri bilgilerini getirir.
+```
+
+
+`LEFT JOIN (LEFT OUTER JOIN)`: Sol tablodaki tüm kayıtları ve sağ tablodaki eşleşen kayıtları getirir. Eşleşme olmayan sağ tablo kayıtları için NULL değerleri döner.
+
+Örnek:
+```sql
+SELECT *
+FROM Customers c
+LEFT JOIN Orders o ON c.CustomerID = o.CustomerID;
+Bu örnekte, Customers tablosu sol tarafta (sol tablo) ve Orders tablosu sağ tarafta (sağ tablo) olarak birleştirilmiştir. Sol tablodaki tüm müşteri kayıtları getirilir ve her bir müşteri için varsa sipariş bilgileri getirilir.
+```
+
+`RIGHT JOIN (RIGHT OUTER JOIN)`: Sağ tablodaki tüm kayıtları ve sol tablodaki eşleşen kayıtları getirir. Eşleşme olmayan sol tablo kayıtları için NULL değerleri döner.
+
+Örnek:
+```sql
+SELECT *
+FROM Orders o
+RIGHT JOIN Customers c ON o.CustomerID = c.CustomerID;
+Bu örnekte, Orders tablosu sağ tarafta (sağ tablo) ve Customers tablosu sol tarafta (sol tablo) olarak birleştirilmiştir. Sağ tablodaki tüm sipariş kayıtları getirilir ve her bir sipariş için varsa müşteri bilgileri getirilir.
+```
+
+`FULL JOIN (FULL OUTER JOIN)`: İki tablodan da eşleşen ve eşleşmeyen tüm kayıtları getirir. Eşleşme olmayan sütunlar için NULL değerleri döner.
+
+Örnek:
+
+```sql
+SELECT *
+FROM Customers c
+FULL JOIN Orders o ON c.CustomerID = o.CustomerID;
+Bu örnekte, Customers tablosu ve Orders tablosu CustomerID sütunları üzerinden FULL JOIN ile birleştirilmiştir. Bu işlem, müşterilerin ve siparişlerin tamamını içeren bir sonuç kümesi oluşturur.
+```
+Bu JOIN türleri, SQL sorgularında verilerin nasıl birleştirileceğini ve hangi koşullara göre eşleştirileceğini belirler. İhtiyaca göre doğru JOIN türünü seçmek, istenilen veri analizini veya raporlamayı elde etmek için önemlidir.
+
+
+
+
+
+
+
+
+
+
